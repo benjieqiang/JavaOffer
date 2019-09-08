@@ -597,6 +597,201 @@ int[] targetArr = new int[array.length];
 System.arraycopy(array,0,targetArr,0,array.length);
 ```
 
+### 数组中只出现一次的数字（56）
+
+一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
+
+思路分析
+
+> 1. 一个数异或自己还是0；
+> 2. 依次异或这个数组中的元素，得到的值肯定是两个不相同的数的异或值
+>
+> 操作：
+>
+> 1. 根据这个值将数组分成第index位和该数一样的，和不一样的；
+> 2. 分别异或这两个数组得到的值就是所求。
+>
+> 注意：
+>
+> 如何找到这个数的第index位为1呢，我们将这个数每次右移一位，直至该数**与1的值为0.**
+>
+> 如何判断某个数的从右数index位为1呢，同理，将这个数从移动index位与1之后如果为0说明是的。
+>
+> 总结：
+>
+> 右移index位与1为0说明该值index位为1.
+
+代码
+
+```java
+//num1,num2分别为长度为1的数组。传出参数
+//将num1[0],num2[0]设置为返回结果
+public class Solution {
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        int length = array.length;
+        // 参数校验
+        if (length == 2) {
+            num1[0] = array[0];
+            num2[0] = array[1];
+            return;
+        }
+        // 遍历数组异或每一个元素，结果肯定是相异的那两个数的异或值
+        int bitResult = 0;
+        for (int i = 0; i < length; ++i) {
+            bitResult ^= array[i];
+        }
+        // 找到该数第一个为1的位的位置
+        int index = findFirst1(bitResult);
+        // 遍历整个数组，对两个数组分别求异或即可。
+        for (int i = 0; i < length; ++i) {
+            if (isBit1(array[i], index)) {
+                num1[0] ^= array[i];
+            } else {
+                num2[0] ^= array[i];
+            }
+        }
+    }
+
+    // 第index位为1
+    private int findFirst1(int bitResult) {
+        int index = 0;
+        while (((bitResult & 1) == 0) && index < 32) {
+            bitResult >>= 1;
+            index++;
+        }
+        return index;
+    }
+    // 判断目标数的二进制表示中从右起数的index位是不是1
+    private boolean isBit1(int target, int index) {
+        return ((target >> index) & 1) == 1;
+    }
+}
+```
+
+### 和为S的两个数字（57）
+
+题目描述
+
+输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
+
+输出描述:
+
+```
+对应每个测试案例，输出两个数，小的先输出。
+```
+
+思路分析
+
+> 排序数组，定义两个指针p1,p2
+>
+> p1指向小的数，p2指向大的数
+>
+> 如果array[p1] + array[p2] == s 加入集合输出
+>
+> array[p1] + array[p2] < s ,p1++，p1右移
+>
+> array[p1] + array[p2] == s ,p2--,p2左移
+
+代码实现 
+
+```java
+import java.util.ArrayList;
+public class Solution {
+ public ArrayList<Integer> FindNumbersWithSum(int[] array, int sum) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if (array == null || array.length == 0 || sum < 0)
+            return list;
+        int p1 = 0;
+        int p2 = array.length - 1;
+        while (p1 < p2) {
+            if (array[p1] + array[p2] == sum) {
+                list.add(array[p1]);
+                list.add(array[p2]);
+                break;
+            } else if (array[p1] + array[p2] < sum) {
+                p1++;
+            } else {
+                p2--;
+            }
+        }
+        return list;
+    }
+}
+```
+
+### 和为S的连续正数序列（57）
+
+小明很喜欢数学,有一天他在做数学作业时,要求计算出9~16的和,他马上就写出了正确答案是100。但是他并不满足于此,他在想究竟有多少种连续的正数序列的和为100(至少包括两个数)。没多久,他就得到另一组连续正数和为100的序列:18,19,20,21,22。现在把问题交给你,你能不能也很快的找出所有和为S的连续正数序列? Good Luck!
+
+输出描述:
+
+```
+输出所有和为S的连续正数序列。序列内按照从小至大的顺序，序列间按照开始数字从小到大的顺序
+```
+
+思路分析
+
+>  双指针问题，当总和小于sum，大指针继续+，否则小指针+
+>
+> 复盘：应该将list用的时候再创建，每次往result中加的是新的list对象；
+
+代码描述
+
+```java
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<ArrayList<Integer>> FindContinuousSequence(int sum) {
+        // 左神：双指针问题，当总和小于sum，大指针继续+，否则小指针+
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        int plow = 1;
+        int phigh = 2;
+        while (phigh > plow) {
+            // 算出两个指针之间的和
+            int curSum = (phigh + plow) * (phigh - plow + 1) >> 1;
+            // 相等，先放入list中，再放入result中
+            if (curSum == sum) {
+                ArrayList<Integer> list = new ArrayList<>();
+                for (int i = plow; i <= phigh; i++) {
+                    list.add(i);
+                }
+                result.add(list);
+                plow++;
+            } else if (curSum < sum) {
+                phigh++;
+            } else {
+                plow++;
+            }
+        }
+        return result;
+    }
+}
+```
+
+### 数组中重复的数字
+
+在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是第一个重复的数字2。
+
+思路分析
+
+> map集合加入数值，value记为0。如果包含这个数，那么就说明重复了，然后将这个数放入输出数组中，返回真。
+
+代码实现
+
+```java
+public boolean duplicate(int numbers[],int length,int [] duplication) { 
+    HashMap<Integer,Integer> map = new HashMap<>();
+    for(int i =0;i<length;i++){
+        if(map.containsKey(numbers[i])){
+            duplication[0] = numbers[i];
+            return true;
+        } else {
+            map.put(numbers[i],0);
+        }
+    }
+    return false;
+}
+```
+
 ### 数组中出现次数超过一半的数字(39) 不懂
 
 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。如果不存在则输出0。
@@ -2277,8 +2472,7 @@ class Solution38 {
  代码实现
 
 ```java
-public class Solution {
-    public String ReverseSentence(String str) {
+ public String ReverseSentence(String str) {
         if (str == null || str.length() == 0) {
             return str;
         }
@@ -2288,7 +2482,7 @@ public class Solution {
         int start = 0; // 单词的起始位置。
         // 再根据空格挨个翻转
         for (int i = 0; i <= chars.length; i++) {
-            // 注意最后一个单词末尾是没有空格的。
+            // 注意最后一个单词末尾是没有空格的，因此需要加上i==chars.length判断
             if (i == chars.length || chars[i] == ' ') {
                 // 翻转i前面的数
                 Reverse(chars, start, i-1);
@@ -2308,7 +2502,6 @@ public class Solution {
             p2--;
         }
     }
-}
 ```
 
 ### 左旋转字符串（58）
@@ -2595,20 +2788,6 @@ public class Solution {
         }
 }
 ```
-
-### 数组中只出现一次的数字（56）
-
-一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
-
-准备知识：
-
-任何数字异或自己为0
-
-思路分析：
-
-
-
-
 
 ## 回溯和DFS篇
 
