@@ -880,7 +880,53 @@ int minInOrder(int[] arr, int p1, int p2) {
 }
 ```
 
+### 把数组排成最小的数(45)
 
+输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+
+思路分析
+
+> 将数组变成链表，然后借用链表中的方法进行排序，需要注意重写的方法，太巧妙了。
+>
+> ​        Collections.sort(list, new Comparator<Integer>() {
+>             @Override
+>             public int compare(Integer o1, Integer o2) {
+>                 String s1 = o1 + "" + o2;
+>                 String s2 = o2 + "" + o1;
+>                 return s1.compareTo(s2);
+>             }
+>         });
+
+代码描述
+
+```java
+class Solution45 {
+    public String PrintMinNumber(int[] numbers) {
+        // numbers有效
+        if (numbers == null || numbers.length == 0) return "";
+        String result = ""; // 返回结果
+        // 将数组变成链表；
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int num : numbers) {
+            list.add(num);
+        }
+        // 集合工具类
+        Collections.sort(list, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                String s1 = o1 + "" + o2;
+                String s2 = o2 + "" + o1;
+                return s1.compareTo(s2);
+            }
+        });
+        // 将list转为字符串；
+        for(int j : list){
+            result += j;
+        }
+        return result;
+    }
+}
+```
 
 
 
@@ -2609,7 +2655,131 @@ class Solution50 {
 }
 ```
 
+### 第一个只出现一次的字符（50）
 
+在一个字符串(0<=字符串长度<=10000，全部由字母组成)中找到第一个只出现一次的字符,并返回它的位置, 如果没有则返回 -1（需要区分大小写）.
+
+思路分析
+
+> 利用hashmap，将字符作为key,如果重复了就将value+1，这里注意的是刚开始key值为null的情况。
+>
+> 最后for循环遍历找到字符数组中的位置。
+
+代码实现
+
+```java
+import java.util.HashMap;
+
+public class Solution {
+    public int FirstNotRepeatingChar(String str) {
+        // 转换为字符数组
+        char[] chars = str.toCharArray();
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < chars.length; i++) {
+            if (map.get(chars[i]) == null) {
+                map.put(chars[i], 1);
+            } else {
+                map.put(chars[i], map.get(chars[i]) + 1);
+            }
+        }
+        for(int i = 0;i<chars.length;i++){
+            if(map.get(chars[i]) == 1) return i;
+        }
+        return -1;
+    }
+}
+```
+
+
+
+把字符串转换成整数
+
+将一个字符串转换成一个整数(实现Integer.valueOf(string)的功能，但是string不符合数字要求时返回0)，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0。
+
+输入描述:
+
+```
+输入一个字符串,包括数字字母符号,可以为空
+```
+
+输出描述:
+
+```
+如果是合法的数值表达则返回该数字，否则返回0
+```
+
+示例1
+
+输入
+
+```
++2147483647
+    1a33
+```
+
+输出
+
+```
+2147483647
+    0
+```
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
+
+### 正则表达式匹配（19）
+
+请实现一个函数用来匹配包括`'.'`和`'*'`的正则表达式。模式中的字符`'.'`表示任意一个字符，而`'*'`表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串`"aaa"`与模式`"a.a"`和`"ab*ac*a"`匹配，但是与`"aa.a"`和`"ab*a"`均不匹配
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
+
+
+
+### 表示数值的字符串（20）
+
+请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串"+100","5e2","-123","3.1416"和"-1E-16"都表示数值。 但是"12e","1a3.14","1.2.3","+-5"和"12e+4.3"都不是。
+
+思路分析
+
+> 正则表达式的应用。
+
+代码实现
+
+```java
+class Solution20 {
+    //正则表达式解法
+    public class Solution {
+        public boolean isNumeric(char[] str) {
+            String string = String.valueOf(str);
+            return string.matches("[\\+\\-]?\\d*(\\.\\d+)?([eE][\\+\\-]?\\d+)?");
+        }
+    }
+/*
+以下对正则进行解释:
+[\\+\\-]?            -> 正或负符号出现与否
+\\d*                 -> 整数部分是否出现，如-.34 或 +3.34均符合
+(\\.\\d+)?           -> 如果出现小数点，那么小数点后面必须有数字；
+                        否则一起不出现
+([eE][\\+\\-]?\\d+)? -> 如果存在指数部分，那么e或E肯定出现，+或-可以不出现，
+                        紧接着必须跟着整数；或者整个部分都不出现
+*/
+}
+```
 
 
 ## 排序和查找篇
