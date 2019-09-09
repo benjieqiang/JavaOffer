@@ -928,7 +928,19 @@ class Solution45 {
 }
 ```
 
+### 最小的K个数(40)(最大堆)
 
+输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
 
 
 
@@ -2406,9 +2418,62 @@ boolean isSymmetricalDFS(TreeNode pRoot)
 }
 ```
 
+### 二叉树的下一个结点（8）
 
+给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。
 
+思路分析
 
+> 分三种情况
+>
+> 1. 节点有右孩子，那么所求节点是他的右孩子的最左节点。比如a->f
+> 2. 节点无右孩子，（父节点：它爸）
+>    1. 它是父节点的左孩子，所求节点是它的父节点
+>    2. 它是父节点的右孩子，找到它爸的他爸的他爸。。。直到他爸是某个节点的左孩子，那么这个节点是所求
+
+代码实现
+
+```java
+    public TreeLinkNode GetNext(TreeLinkNode pNode) {
+        // 边界判断
+        if (pNode == null) return pNode;
+        // 有右子树:找节点的右子树的最左子节点
+        if (pNode.right != null) {
+            TreeLinkNode curr = pNode.right;
+            // 遍历到最左子节点
+            while (curr.left != null)
+                curr = curr.left;
+            return curr;
+        }
+        // 无右子树，先看该节点是不是他爸的左孩子，返回他爸，
+        while(pNode.next != null){
+            TreeLinkNode root = pNode.next;
+            // 如果该节点是父节点的左孩子，返回父节点；
+            if(root.left == pNode){
+                return root;
+            }
+            pNode = pNode.next; // 向上找
+        }
+        // 到了根节点还未找到
+        return null;
+    }
+```
+
+### 数据流中的中位数（34）
+
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。我们使用Insert()方法读取数据流，使用GetMedian()方法获取当前读取数据的中位数。
+
+思路分析
+
+> 大顶堆
+>
+> 小顶堆
+
+代码实现
+
+```java
+
+```
 
 ## 字符串篇
 
@@ -3039,4 +3104,128 @@ public class Solution {
 思路分析：
 
 >
+
+
+
+## 扑克牌顺子（61）
+
+LL今天心情特别好,因为他去买了一副扑克牌,发现里面居然有2个大王,2个小王(一副牌原本是54张^_^)...他随机从中抽出了5张牌,想测测自己的手气,看看能不能抽到顺子,如果抽到的话,他决定去买体育彩票,嘿嘿！！“红心A,黑桃3,小王,大王,方片5”,“Oh My God!”不是顺子.....LL不高兴了,他想了想,决定大\小 王可以看成任何数字,并且A看作1,J为11,Q为12,K为13。上面的5张牌就可以变成“1,2,3,4,5”(大小王分别看作2和4),“So Lucky!”。LL决定去买体育彩票啦。 现在,要求你使用这幅牌模拟上面的过程,然后告诉我们LL的运气如何， 如果牌能组成顺子就输出true，否则就输出false。为了方便起见,你可以认为大小王是0。
+
+思路分析
+
+> 1. 排序数组
+> 2. 统计数组中0出现的次数numberOfZero
+> 3. 统计数组相邻数字之间的空缺数numberOfGap，如果numberOfGap < numberOfZero, true;
+
+代码实现
+
+```java
+  public boolean isContinuous(int[] numbers) {
+        if (numbers == null || numbers.length == 0) return false;
+        // 排序数组
+        Arrays.sort(numbers);
+
+        int numberOfZero = 0;
+        int numberOfGap = 0;
+
+        for (int i = 0; i < numbers.length-1; i++) {
+            // 统计0出现的次数
+            if (numbers[i] == 0){
+                numberOfZero++;
+                continue;
+            }
+
+            // 统计数组相邻数字之间的间隙
+            // 两个数相等，有对子，不可能是顺子
+            if(numbers[i+1] == numbers[i]) {
+                return false;
+            }
+            numberOfGap += numbers[i+1] - numbers[i] - 1;
+        }
+        return numberOfGap <= numberOfZero;
+    }
+```
+
+
+
+## 滑动窗口的最大值
+
+给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}； 针对数组{2,3,4,2,6,2,5,1}的滑动窗口有以下6个： {[2,3,4],2,6,2,5,1}， {2,[3,4,2],6,2,5,1}， {2,3,[4,2,6],2,5,1}， {2,3,4,[2,6,2],5,1}， {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。
+
+思路分析
+
+> 依次遍历数组，
+>
+> 再遍历每一个窗口找到最大值。
+
+代码实现
+
+```java
+    public ArrayList<Integer> maxInWindows(int[] num, int size) {
+        // 判断
+        if (num == null || num.length == 0 || size > num.length || size <= 0) return null;
+        // 遍历数组，找出最大的值
+        ArrayList<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < num.length-size+1; i++) {
+            int max = findMax(num,i,i+size-1);
+            result.add(max);
+        }
+        return result;
+    }
+    private int findMax(int[] array, int start,int stop) {
+        int max = array[start];
+        for(int i = start+1; i <=stop;i++){
+            if(array[i] > max)
+                max = array[i];
+        }
+        return max;
+    }
+```
+
+## 孩子们的游戏(圆圈中最后剩下的数)（62）
+
+每年六一儿童节,牛客都会准备一些小礼物去看望孤儿院的小朋友,今年亦是如此。HF作为牛客的资深元老,自然也准备了一些小游戏。其中,有个游戏是这样的:首先,让小朋友们围成一个大圈。然后,他随机指定一个数m,让编号为0的小朋友开始报数。每次喊到m-1的那个小朋友要出列唱首歌,然后可以在礼品箱中任意的挑选礼物,并且不再回到圈中,从他的下一个小朋友开始,继续0...m-1报数....这样下去....直到剩下最后一个小朋友,可以不用表演,并且拿到牛客名贵的“名侦探柯南”典藏版(名额有限哦!!^_^)。请你试着想下,哪个小朋友会得到这份礼品呢？(注：小朋友的编号是从0到n-1)
+
+如果没有小朋友，请返回-1
+
+思路分析
+
+> 不太懂
+
+代码实现
+
+```java
+    public int LastRemaining_Solution(int n, int m) {
+        if (n < 1 || m < 1) return -1;
+        // 将这n个数存入链表中
+        ArrayList<Integer> list = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            list.add(i);
+        }
+
+        int index = 0;
+        while (list.size() > 1) {
+            index = (index + m - 1) % list.size();
+            list.remove(index);
+        }
+        return list.get(0);
+    }
+```
+
+
+
+### 丑数（49）
+
+把只包含质因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含质因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
 
