@@ -110,35 +110,6 @@ Python是强类型，动态类型，java是强类型，静态语言
 byte—>short,char—> int —> long—> float —> double 
 ```
 
-数据类型转换必须满足如下规则：
-
-- 不能对boolean类型进行类型转换。
-
-- 不能把对象类型转换成不相关类的对象。
-
-- 由大到小会丢失精度：在把容量大的类型转换为容量小的类型时必须使用强制类型转换。
-
-  强制类型转换
-
-  - 条件是转换的数据类型必须是兼容的。
-  - 格式：(type)value type是要强制类型转换后的数据类型
-
-- 转换过程中可能导致溢出或损失精度，例如：
-
-  ```
-  int i =128;   
-  byte b = (byte)i;//-128
-  ```
-
-  因为 byte 类型是 8 位，最大值为127，所以当 int 强制转换为 byte 类型时，值 128 时候就会导致溢出。
-
-- 浮点数到整数的转换是通过舍弃小数得到，而不是四舍五入，例如：
-
-  ```
-  (int)23.7 == 23;        
-  (int)-45.89f == -45
-  ```
-
 ## 包装类
 
 ### 装箱
@@ -231,6 +202,8 @@ Integer与Integer比较的时候，由于直接赋值的时候会进行自动装
 > 子类对父类的方法的重写或者覆盖
 >
 > 同名同参同返回值
+>
+> 子类修饰符，异常类型大于父类
 
 ## 访问控制权限
 
@@ -254,6 +227,10 @@ Integer与Integer比较的时候，由于直接赋值的时候会进行自动装
 
 含义：声明类、 变量和方法时， 可使用关键字final来修饰,表示“ 最终的” 
 
+```java
+类不能被继承，方法不能被重写，变量称为常量，只能被赋值一次。
+```
+
 > 特点
 > final标记的类不能被继承。
 >
@@ -263,6 +240,16 @@ Integer与Integer比较的时候，由于直接赋值的时候会进行自动装
 > final double MY_PI = 3.14;
 >
 > final修饰引用保证引用不能指向别的对象，否则会报错。
+
+## static关键字
+
+静态变量：类变量，属于类，所有的实例都共享静态变量，通过类名来访问它。在内存中只存一份。
+
+静态方法：必须有实现，在类加载的时候就有了。
+
+静态语句块：类初始化时只运行一次
+
+静态内部类：不依赖于外部类的实例，静态内部类不能访问外部类的非静态的变量和方法。
 
 ## 代码块加载顺序
 
@@ -379,106 +366,22 @@ super和this的区别
 
 ## 抽象类与接口
 
-1. 都不能直接被实例化，如果要实例化，需要有子类继承抽象类并实现抽象类中的所有方法，借助多态让接口定义的变量指向子类对象；
-2. 抽象类需要被子类继承，接口需要被子类实现
-3. 抽象类可以声明也可以实现，实现的时候就是普通方法，接口只能对方法声明
-4. 抽象类中方法必须全部被子类实现，如果子类不能全部实现，子类还是抽象类；接口方法程序全部被子类实现，如果子类不能实现那么子类必须是抽象类
-5. 抽象类中可以内有抽象方法
-6. 抽象类中的方法都要被实现，所以抽象方法不能是static或private
-7. 抽象类用来抽象类别，接口用来抽象方法功能。
-8. 抽象类：像XXX一样 is a。接口：能XXX这样 like a
+区别：
 
-不同点：
-（1）接口只有定义，不能有方法的实现，java 1.8中可以定义default方法体，而抽象类可以有定义与实现，方法可在抽象类中实现。
+所有的对象都是通过类来描述的，而并不是所有的类都是用来描述对象的，如果一个类中没有足够的信息来描绘一个具体的对象，就是抽象类。
 
-（2）一个类可以实现多个接口，但一个类只能继承一个抽象类。所以，使用接口可以间接地实现多重继承。
-（3）接口成员变量默认为public static final，必须赋初值，不能被修改；其所有的成员方法都是public、abstract的。抽象类中成员变量默认default，可在子类中被重新定义，也可被重新赋值；抽象方法被abstract修饰，不能被private、static、synchronized和native等修饰，必须以分号结尾，不带花括号。
+接口：
 
-```java
-public interface InterfaceDemo {
-
-// 抽象方法
-//    public abstract void method();// abstract可以省略，无方法体，供子类实现使用
-
-// 含有默认方法和静态方法
-public default void method(){};// default不能省，供子类调用或重写
-public static void method2(){};// 供接口直接调用
-
-// 含有私有方法和私有静态方法
-//    private void method3(){} //jdk9加入，供接口中的默认方法或静态方法调用
-}
-```
-
-
-
-Java中支持多继承吗：
-
-支持，只不过java将多继承进行了改良，利用了多实现的方式，但是接口的出现实现了多继承，原因就在于接口的方法中没有方法体。
+所有的变量默认由public static final修饰，所有的抽象方法默认public abstract
 
 ### 接口：
 
 - 所有成员变量都默认是由public static final修饰的 
-- 所有抽象方法都默认是由public abstract修饰的 
+- 所有抽象方法都默认是由public abstract修饰的 ，无方法体；
 - 无构造器
 - 多继承
 
-![1567087331051](D:/JavaNote/Toffer/%E4%B8%B4%E6%97%B6%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E5%A4%B9/1567087331051.png)
-
-接口的实现：
-
-- 先写extends，后写implements 
-- 一个类可以实现多个接口，接口可以继承其他接口
-- 实现接口的类必须把该接口中的所有方法都实现了，否则该类还是一个抽象类
-
-jdk7.0之前，接口这种抽象类只包含常量和方法；
-
-jdk8.0以后，接口可以添加静态方法和默认方法；
-
-静态方法：static修饰；可以通过接口直接调用静态方法，执行方法体；
-
-默认方法：default修饰；可以看到List源码中好多用default修饰的；
-
-### 抽象类：
-
-abstract修饰的一个类
-
-abstract修饰的方法是抽象方法，只有声明，没有方法实现，分号结束。
-
-含有抽象方法的类必须被声明为抽象类 
-
-抽象类不能被实例化。抽象类是用来被继承的，抽象类的子类必须重写父类的抽象方法，并提供方法体。若没有重写全部的抽象方法，仍为抽象类。 
-
-不能用abstract修饰变量、代码块、构造器 
-
-不能用abstract修饰私有方法、静态方法、 final的方法、 final的类 
-
-
-
-代码
-
 ```java
-abstract class DemoA {
-    int a = 666; // 常量
-
-    abstract void haha(); //抽象方法
-
-    void hehe() { // 普通方法
-
-    }
-
-    DemoA() {
-        System.out.println("构造方法");
-    }
-
-    {
-        System.out.println("代码块");
-    }
-
-    static {
-        System.out.println("静态代码块");
-    }
-}
-
 interface DemoB {
     int a = 11; // 默认修饰是public static final
 
@@ -520,21 +423,131 @@ interface DemoB {
 }
 ```
 
-## 线程创建方式
 
-一共四种：
 
-继承Thead类
+```java
+public interface InterfaceDemo {
 
-实现Runnable接口
+// 抽象方法
+//    public abstract void method();// abstract可以省略，无方法体，供子类实现使用
 
-实现Callable接口
+// 含有默认方法和静态方法
+public default void method(){};// default不能省，供子类调用或重写
+public static void method2(){};// 供接口直接调用
 
-线程池
+// 含有私有方法和私有静态方法
+//    private void method3(){} //jdk9加入，供接口中的默认方法或静态方法调用
+}
+```
 
-## String
+![1567087331051](D:/JavaNote/Toffer/%E4%B8%B4%E6%97%B6%E5%9B%BE%E7%89%87%E6%96%87%E4%BB%B6%E5%A4%B9/1567087331051.png)
 
-String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？
+接口的实现：
+
+- 先写extends，后写implements 
+- 一个类可以实现多个接口，接口可以继承其他接口
+- 实现接口的类必须把该接口中的所有方法都实现了，否则该类还是一个抽象类
+
+jdk7.0之前，接口这种抽象类只包含常量和方法；
+
+jdk8.0以后，接口可以添加静态方法和默认方法；
+
+静态方法：static修饰；可以通过接口直接调用静态方法，执行方法体；
+
+默认方法：default修饰；可以看到List源码中好多用default修饰的；
+
+### 抽象类：
+
+abstract修饰的一个类
+
+abstract修饰的方法是抽象方法，只有声明，没有方法实现，分号结束。
+
+含有抽象方法的类必须被声明为抽象类 
+
+抽象类不能被实例化。抽象类是用来被继承的，抽象类的子类必须重写父类的抽象方法，并提供方法体。若没有重写全部的抽象方法，仍为抽象类。 
+
+不能用abstract修饰变量、代码块、构造器 
+
+不能用abstract修饰私有方法、静态方法、 final的方法、 final的类 
+
+```java
+abstract class DemoA {
+    int a = 666; // 常量
+
+    abstract void haha(); //抽象方法
+
+    void hehe() { // 普通方法
+
+    }
+
+    DemoA() {
+        System.out.println("构造方法");
+    }
+
+    {
+        System.out.println("代码块");
+    }
+
+    static {
+        System.out.println("静态代码块");
+    }
+}
+```
+
+## 静态内部类和匿名类
+
+```
+静态内部类可以用 public,protected,private 修饰
+静态内部类中可以定义静态或者非静态的成员
+静态内部类不能直接访问外部类的非静态成员（来源于静态方法不能访问非静态成员）
+只能访问外部类的静态成员，本类内部成员
+
+外部类访问内部类：
+1. 不能直接访问，需要先实例化内部类再调用
+2. 可以访问内部类的：私有成员。静态成员：内部类.静态成员。访问公有成员。
+```
+
+```java
+public class StaticClass {
+    private static String name = "benjie";
+    private String num = "X001";
+
+    static class Person {
+        // 静态内部类可以用 public,protected,private 修饰
+        // 静态内部类中可以定义静态或者非静态的成员
+        private String address = "China";
+        private static String x = "as";
+        public String mail = "benjieqiang@163.com";//内部类公有成员
+
+        public void display() {
+            // System.out.println(num); // 报错
+            // 静态内部类不能访问外部类的非静态成员(包括非静态变量和非静态方法)
+            System.out.println(name);//只能直接访问外部类的静态成员
+            //静态内部类只能访问外部类的静态成员(包括静态变量和静态方法)
+            System.out.println("Inner " + address);//访问本内部类成员。
+        }
+    }
+
+    public void printInfo() {
+        Person person = new Person();
+        // 外部类访问内部类的非静态成员:实例化内部类即可
+        person.display();
+//        System.out.println(mail);//不可访问
+//        System.out.println(address);//不可访问
+        System.out.println(person.address);//可以访问内部类的私有成员
+        System.out.println(Person.x);// 外部类访问内部类的静态成员： 内部类.静态成员
+        System.out.println(person.mail);//可以访问内部类的公有成员
+    }
+
+    // 主函数
+    public static void main(String[] args) {
+        StaticClass staticTest = new StaticClass();
+        staticTest.printInfo();
+    }
+}
+```
+
+## String和StringBuffer、StringBuilder的区别是什么？String为什么是不可变的？
 
 可变与不可变：
 
@@ -562,19 +575,25 @@ StringBuilder 对方法没加同步锁，所以是非线程安全的。
 
 总结：
 
-> 不可变：String 是不可变的，底层使用final修饰的字符串数组存储，StringBuffer和StringBuilder继承于公共类AbstractStringBuilder，底层使用字符串数组存储，无final修饰。
+> **不可变：**String 是不可变的，底层使用final修饰的字符串数组存储，StringBuffer和StringBuilder继承于公共类AbstractStringBuilder，底层使用字符串数组存储，无final修饰。
 >
-> 底层源码：StringBuffer（）的扩容，默认初始容量为16，如果append一个字符串的长度大于16，先计算添加后的字符串大小，判断是否需要扩容，需要扩容的话就扩大为16*2+2 = 34，此时如果34还是小于字符串的长度，那么直接赋值该长度。再将扩容后的将原有数组中的元素复制到新的数组中。
+> **底层源码：**StringBuffer（）的扩容，默认初始容量为16，如果append一个字符串的长度大于16，先计算添加后的字符串大小，判断是否需要扩容，需要扩容的话就扩大为16*2+2 = 34，此时如果34还是小于字符串的长度，那么直接赋值该长度。再将扩容后的将原有数组中的元素复制到新的数组中。
 >
 > 线程安全：String对象不可变，线程安全；StringBuffer加锁，线程安全，StringBuilder未加锁，不安全
 >
-> 性能：
+> **性能：**
 >
-> 每次对String类型改变时，都会生成一个新的String对象，然后将指针指向新对象，适合少量数据
+> String类型改变时，都会生成一个新的String对象，然后将指针指向新对象，适合少量数据
 >
 > StringBuffer对对象本身进行操作，线程安全。适合多线程，
 >
 > StringBuilder线程不安全，适合多线程。
+
+## 不可变性的理解
+
+1. final 修饰的。如果String不是final，那么可以有子类继承父类，子类可重写父类方法，修改字符串，违背了string的不可变性。
+2. +号连接会创建新的字符串，底层会转为StringBuilder的append方法
+3. String s = new String("abc"),会创建两个或1个对象，静态区有的话，
 
 ## String的hashcode和toString
 
@@ -586,5 +605,24 @@ StringBuilder 对方法没加同步锁，所以是非线程安全的。
 
 
 
+## 参数传递
+
+Dog dog = new Dog("A")  dog是一个地址，foo(dog)是将对象的地址传到了形参上，
+
+1. 因此如果在方法上使该指针指向其他对象，此时在该foo()方法中修改对象的值不会影响原来的dog.
+2. 如果在方法里重新设置dog值，会改变该对象的值；
 
 
+## 集合
+
+#### HashMap
+
+
+
+
+
+
+
+## 锁
+
+volitate synchronized Lock

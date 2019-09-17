@@ -942,7 +942,33 @@ class Solution45 {
 
 ```
 
+### 机器人的运动范围(13)
 
+地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
+
+### 矩阵中的路径（12）
+
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。 例如 a b c e s f c s a d e e 矩阵中包含一条字符串"bccced"的路径，但是矩阵中不包含"abcb"路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入该格子。
+
+思路分析
+
+> 
+
+代码实现
+
+```java
+
+```
 
 ## 链表篇
 
@@ -2200,7 +2226,7 @@ class Solution26 {
     }
 ```
 
-### 把二叉树打印成多行
+### 把二叉树打印成多行(32)
 
 从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。
 
@@ -2474,6 +2500,40 @@ boolean isSymmetricalDFS(TreeNode pRoot)
 ```java
 
 ```
+
+### 二叉搜索树的第k个节点（54）
+
+给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
+
+思路分析
+
+> 考察二叉树的中序遍历，如何进行中序遍历呢。
+
+代码实现
+
+```java
+class Solution54 {
+    ArrayList<TreeNode> result = new ArrayList<>();
+
+    TreeNode KthNode(TreeNode pRoot, int k) {
+        // 边界值判断
+        if (pRoot == null || k == 0) return null;
+        inorder(pRoot); //中序遍历得到的结果
+        // 在链表中找到第k个数，注意k的取值范围应该在0-k-1
+        return k > result.size() ? null : result.get(k - 1);
+    }
+    // 中序遍历核心代码
+    private void inorder(TreeNode root) {
+        if (root != null) {
+            if (root.left != null) inorder(root.left);
+            result.add(root);
+            if (root.right != null) inorder(root.right);
+        }
+    }
+}
+```
+
+
 
 ## 字符串篇
 
@@ -2757,7 +2817,7 @@ public class Solution {
 
 
 
-把字符串转换成整数
+### 把字符串转换成整数(67)
 
 将一个字符串转换成一个整数(实现Integer.valueOf(string)的功能，但是string不符合数字要求时返回0)，要求不能使用字符串转换整数的库函数。 数值为0或者字符串不是一个合法的数值则返回0。
 
@@ -2791,12 +2851,39 @@ public class Solution {
 
 思路分析
 
-> 
+> 字符对应的'0':48;'9':57
+>
+> 48(表示数字'0')、65(表示大写'A')、97(表示小写'a')三个最重要的ASCII码。
+>
+> 首先记录负号，如果有的话。
+>
+> 从第二个元素开始遍历整个数组，遇到不在48-57里面的数就返回0，否则挨个加
+>
+> ```
+> sum = sum * 10 + chars[i] -48;
+> ```
 
 代码实现
 
 ```java
-
+    public int StrToInt(String str) {
+        // 字符串为空或长度为0.
+        if (str == null || str.length() == 0) return 0;
+        // 转为字符数组
+        char[] chars = str.toCharArray();
+        int flag = 0;
+        // 第一个元素为负，记录一下
+        if (chars[0] == '-') flag = 1;
+        int sum = 0;
+        // 从第二个元素开始遍历整个数组，遇到不在48-57里面的数就返回0，否则挨个加
+        for(int i = flag;i<chars.length;i++){
+            if(chars[i] == '+') continue;
+            // '0':48;'9':57
+            if(chars[i] < 48 || chars[i] > 57) return 0;
+            sum = sum * 10 + chars[i] -48;
+        }
+        return flag == 0 ? sum : sum * -1;
+    }
 ```
 
 ### 正则表达式匹配（19）
@@ -2845,6 +2932,9 @@ class Solution20 {
 */
 }
 ```
+
+
+
 
 
 ## 排序和查找篇
